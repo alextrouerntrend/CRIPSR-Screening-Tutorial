@@ -14,28 +14,10 @@
 
 module load umi-tools/1.1.5
 
-# Set input and output file names
-INPUT_R1=$1 
-INPUT_R2=${1/R1/R2}
-OUTPUT="deduplicated.fastq.gz"
-
-# UMI parameters
-UMI_START=29
-UMI_END=37
-UMI_SIZE=$((UMI_END - UMI_START + 1)) 
-
-umi_tools extract \
-    --extract-method=regex \
-    --bc-pattern="TAGGGAAAGAGTGT(.{8})" \
-    -o output_prefix  
-
+INPUT=$1
+OUTPU=${INPUT/.bam/_dedup.bam}
 
 # Run umi_tools dedup
 umi_tools dedup \
-    -I ${INPUT_R1} \
-    -S ${INPUT_R2} \
-    --umi-method="extract" \
-    --extract-method="string" \
-    --umi-start=${UMI_START} \
-    --umi-length=${UMI_SIZE} \
-    -O ${OUTPUT}
+	--stdin=IN_BAM \
+	--stdout=OUT_BAM
